@@ -1,0 +1,40 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #ca6641;
+  color: #481ce8;
+  margin: 2rem auto;
+  max-width: 700px;
+  line-height: 1.4;
+}
+
+h1 {
+  text-align: right;
+  color: #2a5298;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  flex: 1;
+}
+
+button {
+  background-color: #2a5298;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #35802d;
+}
+
+li.done span {
+  text-decoration: line-through;
+  color: gray;
+  opacity: 0.6;
+}
