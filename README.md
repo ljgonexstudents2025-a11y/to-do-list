@@ -9,5 +9,5 @@ URL: http://127.0.0.1:5001/
 
 Steps: 
 1. Clone the Repo
-2. In the terminal write: run server.py
+2. In the terminal write: Python server.py
 3. Open URL
