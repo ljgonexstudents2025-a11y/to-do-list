@@ -129,3 +129,92 @@ li.done span {
   color: var(--text-muted);
   opacity: 0.7;
 }
+
+/* Title font */
+h1 {
+  font-family: "Playwrite Cesko", serif;
+}
+
+/* Today text */
+.today {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* Category select & date input tweak */
+#dueDate,
+#category {
+  padding: 0.5rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 124, 107, 0.4);
+  background-color: #ffffff;
+  font-size: 0.85rem;
+}
+
+/* Counter text */
+.counter {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.filters button {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 124, 107, 0.4);
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.filters button.active {
+  background-color: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* Todo content layout */
+.todo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Meta info under task text */
+.todo-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.15rem;
+}
+
+/* Category badge */
+.badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--accent-soft);
+  text-transform: capitalize;
+}
+
+/* Delete button style */
+.delete-btn {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.7rem;
+}
+
+/* Clear completed button */
+.clear-btn {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  background-color: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
