@@ -1,40 +1,131 @@
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #ca6641;
-  color: #481ce8;
-  margin: 2rem auto;
-  max-width: 700px;
-  line-height: 1.4;
+/* Soft, natural color palette */
+:root {
+  --bg: #f5f2eb;         /* warm off-white */
+  --card: #ffffff;       /* white card */
+  --accent: #5f7c6b;     /* sage green */
+  --accent-soft: #e3eee6;/* very light green */
+  --text-main: #2f2922;  /* warm dark brown */
+  --text-muted: #8b8375; /* soft muted brown */
 }
 
+/* Page layout */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1.5rem;
+}
+
+/* Main container (wrap your content in <div class="app">...</div>) */
+.app {
+  background-color: var(--card);
+  max-width: 700px;
+  width: 100%;
+  padding: 2rem 2rem 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(95, 124, 107, 0.12);
+}
+
+/* Heading */
 h1 {
-  text-align: right;
-  color: #2a5298;
+  margin: 0 0 1rem 0;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: left;
+}
+
+/* Small subtitle text (optional) */
+.subtitle {
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Input + button row */
+.input-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 input[type="text"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 124, 107, 0.4);
   flex: 1;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: var(--accent-soft);
+  color: var(--text-main);
 }
 
+input[type="text"]::placeholder {
+  color: var(--text-muted);
+}
+
+input[type="text"]:focus {
+  border-color: var(--accent);
+  background-color: #f8fcf9;
+}
+
+/* Button */
 button {
-  background-color: #2a5298;
+  background-color: var(--accent);
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 button:hover {
-  background-color: #35802d;
+  background-color: #4c6557;
+  box-shadow: 0 10px 20px rgba(95, 124, 107, 0.25);
+  transform: translateY(-1px);
 }
 
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* List styling (for a todo list, etc.) */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+li span {
+  flex: 1;
+}
+
+/* Completed items */
 li.done span {
   text-decoration: line-through;
-  color: gray;
-  opacity: 0.6;
+  color: var(--text-muted);
+  opacity: 0.7;
 }
