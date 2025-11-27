@@ -129,7 +129,10 @@ def delete_todo(todo_id):
     get_db().commit()
     return "", 204
 
+import os
+
 if __name__ == "__main__":
     with app.app_context():
         init_db()
-    app.run(debug=True, port=5001)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(debug=False, host="0.0.0.0", port=port)
