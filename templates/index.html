@@ -8,6 +8,15 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   </head>
+<nav>
+    {% if session.username %}
+        <span>Logged in as {{ session.username }}</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('signup') }}">Sign Up</a>
+    {% endif %}
+</nav>
 
   <body>
 

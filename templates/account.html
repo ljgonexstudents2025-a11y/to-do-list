@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Account</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
+</head>
+<body>
+    <h1 style="color: black; margin: 2rem;">ACCOUNT PAGE TEST</h1>
+
+    <div style="margin: 2rem; color: black;">
+        <p><strong>User ID:</strong> {{ user.id }}</p>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+
+        <p><a href="{{ url_for('logout') }}">Log out</a></p>
+        <p><a href="{{ url_for('home') }}">Back to To-Do List</a></p>
+    </div>
+</body>
+</html>
