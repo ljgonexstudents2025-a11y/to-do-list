@@ -1,9 +1,100 @@
-from flask import Flask, request, jsonify, render_template, g
+from flask import Flask, request, jsonify, render_template, g, Response
 import sqlite3
 from pathlib import Path
+import time
+
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 DB_PATH = Path("todos.db")
 app = Flask(__name__)
+
+# ---------- Prometheus Metrics ----------
+
+REQUEST_COUNT = Counter(
+    "todo_app_http_requests_total",
+    "Total HTTP requests",
+    ["method", "endpoint", "http_status"],
+)
+
+REQUEST_LATENCY = Histogram(
+    "todo_app_http_request_duration_seconds",
+    "HTTP request latency in seconds",
+    ["endpoint"],
+)
+
+ERROR_COUNT = Counter(
+    "todo_app_http_errors_total",
+    "Total HTTP 5xx errors",
+    ["endpoint"],
+)
+
+# ---------- Metrics hooks ----------
+
+@app.before_request
+def start_timer():
+    # store start time on flask.g so we can compute latency later
+    g.start_time = time.perf_counter()
+
+
+@app.after_request
+def record_metrics(response):
+    # compute latency
+    try:
+        latency = time.perf_counter() - g.start_time
+    except Exception:
+        latency = None
+
+    endpoint = request.endpoint or "unknown"
+
+    # increment request count
+    REQUEST_COUNT.labels(
+        method=request.method,
+        endpoint=endpoint,
+        http_status=response.status_code,
+    ).inc()
+
+    # observe latency
+    if latency is not None:
+        REQUEST_LATENCY.labels(endpoint=endpoint).observe(latency)
+
+    # count 5xx errors
+    if response.status_code >= 500:
+        ERROR_COUNT.labels(endpoint=endpoint).inc()
+
+    return response
+
+# ---------- Health check ----------
+
+@app.route("/health")
+def health():
+    """
+    Basic health endpoint for monitoring.
+    Returns 200 and simple JSON if the app + DB are ok.
+    """
+    status = {"status": "ok"}
+
+    try:
+        db = get_db()
+        # simple test query
+        db.execute("SELECT 1")
+        status["database"] = "ok"
+    except Exception as exc:
+        status["database"] = "error"
+        status["error"] = str(exc)
+
+    http_status = 200 if status.get("database") == "ok" else 500
+    return jsonify(status), http_status
+
+# ---------- Metrics endpoint ----------
+
+@app.route("/metrics")
+def metrics():
+    """
+    Expose Prometheus metrics.
+    """
+    data = generate_latest()
+    return Response(data, mimetype=CONTENT_TYPE_LATEST)
+
 
 # ---------- Database helpers ----------
 def get_db():
