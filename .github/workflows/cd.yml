@@ -69,5 +69,5 @@ jobs:
     - name: Deploy to Azure Web App (container)
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}           # name of your Azure Web App
+        app-name: ledian-to-do-list-app       # name of your Azure Web App
         images: ${{ secrets.DOCKER_USERNAME }}/todo-list:latest
