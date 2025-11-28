@@ -55,13 +55,17 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/todo-list:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/ledian-todo-list:latest
 
       # 9) Login to Azure
       - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: List all Azure Web Apps
+        run: |
+          az webapp list --query "[].{name:name}" -o table
 
       # 10) Verify Azure account (sanity check)
       - name: Verify Azure account
@@ -74,4 +78,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ledian-to-do-list-app
-          images: ${{ secrets.DOCKER_USERNAME }}/todo-list:latest
+          images: ${{ secrets.DOCKER_USERNAME }}/ledian-todo-list:latest
