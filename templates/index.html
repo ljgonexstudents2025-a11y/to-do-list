@@ -5,49 +5,56 @@
     <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/static/styles.css" />
-    <!-- (Optional) Google Font for the title -->
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+Cesko:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   </head>
 
   <body>
-    <div class="app">
-      <h1>To-Do List</h1>
-      <p class="subtitle">Plan your day and future tasks 🌿</p>
-      <p id="today" class="today"></p>
 
-      <!-- Input row: text + date + category + add button -->
-      <div class="input-row">
-        <input id="newText" type="text" placeholder="Add a task..." />
+    <!--  BACKGROUND VIDEO-->
+    <video autoplay muted loop id="bg-video">
+      <source src="/static/background.mp4" type="video/mp4" />
+    </video>
 
-        <input id="dueDate" type="date" />
+    <!-- Everything else goes ABOVE the video -->
+    <div class="page-content">
 
-        <select id="category">
-          <option value="">No category</option>
-          <option value="personal">Personal</option>
-          <option value="school">School</option>
-          <option value="work">Work</option>
-        </select>
+      <div class="app">
+        <h1>my tasks</h1>
+        <p class="subtitle">plan your day and future tasks🪼</p>
+        <p id="today" class="today"></p>
 
-        <button id="addBtn">Add</button>
+        <!-- Input row -->
+        <div class="input-row">
+          <input id="newText" type="text" placeholder="add a task..." />
+
+          <input id="dueDate" type="date" />
+
+          <select id="category">
+            <option value="">no category</option>
+            <option value="personal">personal</option>
+            <option value="school">school</option>
+            <option value="work">work</option>
+          </select>
+
+          <button id="addBtn">add</button>
+        </div>
+
+        <p id="counter" class="counter"></p>
+
+        <div class="filters">
+          <button type="button" data-filter="all" class="active">All</button>
+          <button type="button" data-filter="active">Active</button>
+          <button type="button" data-filter="done">Done</button>
+        </div>
+
+        <ul id="list"></ul>
+
+        <button id="clearCompleted" type="button" class="clear-btn">
+          Clear completed
+        </button>
       </div>
 
-      <!-- Counter -->
-      <p id="counter" class="counter"></p>
-
-      <!-- Filters -->
-      <div class="filters">
-        <button type="button" data-filter="all" class="active">All</button>
-        <button type="button" data-filter="active">Active</button>
-        <button type="button" data-filter="done">Done</button>
-      </div>
-
-      <!-- List -->
-      <ul id="list"></ul>
-
-      <!-- Clear completed -->
-      <button id="clearCompleted" type="button" class="clear-btn">
-        Clear completed
-      </button>
     </div>
 
     <script src="/static/app.js"></script>
