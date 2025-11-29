@@ -90,25 +90,34 @@
   position: absolute;
   top: 56px;
   right: 1.25rem;
-  min-width: 170px;
-
+  min-width: 180px;
   padding: 0.5rem 0;
   border-radius: 18px;
 
   background: linear-gradient(
-    140deg,
-    rgba(15, 23, 42, 0.98),
-    rgba(15, 23, 42, 0.9)
+    145deg,
+    rgba(15, 23, 42, 0.96),
+    rgba(15, 23, 42, 0.88)
   );
   border: 1px solid rgba(148, 163, 184, 0.6);
   box-shadow:
-    0 22px 60px rgba(0, 0, 0, 0.85),
+    0 22px 60px rgba(15, 23, 42, 0.95),
     0 0 0 1px rgba(56, 189, 248, 0.16);
-  backdrop-filter: blur(18px) saturate(170%);
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
 
-  display: none;
-  z-index: 999;
+  /* always in layout, but hidden by opacity */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  z-index: 1200;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.hamburger-menu.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .hamburger-menu a {
@@ -122,11 +131,6 @@
 .hamburger-menu a:hover {
   background: rgba(56, 189, 248, 0.14);
   color: #f9fbff;
-}
-
-/* class toggled by JS */
-.hamburger-menu.is-open {
-  display: block;
 }
 
 /* Content offset below top bar */

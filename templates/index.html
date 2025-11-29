@@ -20,7 +20,7 @@
       <div class="top-bar__right">
         <span class="top-bar__username">
           {% if session.username %}
-            Hey, {{ session.username }}!
+            Logged in as {{ session.username }}
           {% else %}
             Not logged in
           {% endif %}
@@ -43,6 +43,7 @@
         </nav>
       </div>
     </header>
+
 
     <!-- Background video -->
     <video autoplay muted loop id="bg-video">
@@ -88,38 +89,10 @@
       </div>
     </div>
 
+     <!-- JS for the todo app -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
-        <script src="{{ url_for('static', filename='app.js') }}"></script>
 
-    <!-- Inline script just for the hamburger menu -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const btn = document.getElementById("hamburger");
-        const menu = document.getElementById("hamburger-menu");
-
-        if (!btn || !menu) {
-          return;
-        }
-
-        // Toggle menu on button click
-        btn.addEventListener("click", function (event) {
-          event.stopPropagation(); // don't bubble to document
-          menu.classList.toggle("is-open");
-        });
-
-        // Close menu when clicking anywhere else
-        document.addEventListener("click", function (event) {
-          if (!menu.classList.contains("is-open")) return;
-
-          const clickInside =
-            menu.contains(event.target) || btn.contains(event.target);
-
-          if (!clickInside) {
-            menu.classList.remove("is-open");
-          }
-        });
-      });
-    </script>
+    <!-- Hamburger menu handlers moved to `static/app.js` to avoid duplicate listeners -->
+    <!-- Inline script removed. See `static/app.js` for the implementation. -->
   </body>
 </html>
-

@@ -9,11 +9,19 @@ const clearCompletedBtn = document.getElementById("clearCompleted");
 const filtersContainer = document.querySelector(".filters");
 const todayEl = document.getElementById("today");
 
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize hamburger menu behavior in an idempotent way.
+function initHamburger() {
   const btn = document.getElementById("hamburger");
   const menu = document.getElementById("hamburger-menu");
 
-  if (!btn || !menu) return;
+  if (!btn || !menu) {
+    // Elements not present on this page (e.g., when testing or other templates)
+    return;
+  }
+
+  // Avoid attaching multiple listeners if already initialized
+  if (btn.dataset.hamburgerInit === "true") return;
+  btn.dataset.hamburgerInit = "true";
 
   // toggle on button click
   btn.addEventListener("click", (event) => {
@@ -32,7 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
       menu.classList.remove("is-open");
     }
   });
-});
+}
+
+// Initialize now if DOM is already ready, otherwise wait for DOMContentLoaded
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initHamburger);
+} else {
+  initHamburger();
+}
 
 
 // In-memory list of todos (comes from the server)
@@ -57,13 +72,15 @@ if (dueDateInput) {
 
 // --- Event listeners ---
 
-addBtn.addEventListener("click", handleAdd);
+if (addBtn) addBtn.addEventListener("click", handleAdd);
 
-textInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    handleAdd();
-  }
-});
+if (textInput) {
+  textInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      handleAdd();
+    }
+  });
+}
 
 // Filter buttons (All / Active / Done)
 if (filtersContainer) {
@@ -83,7 +100,8 @@ if (filtersContainer) {
 }
 
 // Clear completed button
-clearCompletedBtn.addEventListener("click", async () => {
+if (clearCompletedBtn) {
+  clearCompletedBtn.addEventListener("click", async () => {
   const doneTodos = todos.filter((t) => t.done);
   await Promise.all(
     doneTodos.map((todo) =>
@@ -91,7 +109,8 @@ clearCompletedBtn.addEventListener("click", async () => {
     )
   );
   await loadTodos();
-});
+  });
+}
 
 // --- Core functions ---
 
