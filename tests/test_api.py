@@ -40,7 +40,7 @@ def test_home_page_loads():
     client = app.test_client()
     resp = client.get("/")
     assert resp.status_code == 200
-    assert b"To-Do List" in resp.data
+    assert b"SIENE" in resp.data
 
 
 def test_list_todos_initially_empty():
