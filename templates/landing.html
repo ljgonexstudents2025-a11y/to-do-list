@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SIENE — plan and achieve with us!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+
+  <body>
+    <video autoplay muted loop id="bg-video">
+      <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4" />
+    </video>
+
+    <div class="landing">
+      <div class="landing-card">
+        <h1 class="landing-title">SIENE</h1>
+        <p class="landing-subtitle">plan and achieve with us!</p>
+
+        <div class="landing-actions">
+          <a class="glass-btn primary" href="{{ url_for('login') }}">Login</a>
+          <a class="glass-btn" href="{{ url_for('signup') }}">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

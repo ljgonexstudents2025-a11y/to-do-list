@@ -105,26 +105,7 @@ def init_db():
 @app.route("/")
 def landing():
     """Starter page: Login or Sign Up."""
-    return f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Welcome</title>
-    </head>
-    <body>
-        <h1 style="color:black; margin:2rem;">Welcome to your To-Do List</h1>
-        <div style="margin:2rem;">
-            <a href="{url_for('login')}">
-                <button style="padding:0.5rem 1rem; margin-right:1rem;">Login</button>
-            </a>
-            <a href="{url_for('signup')}">
-                <button style="padding:0.5rem 1rem;">Sign Up</button>
-            </a>
-        </div>
-    </body>
-    </html>
-    """
+    return render_template("landing.html")
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -166,40 +147,8 @@ def signup():
     else:
         error_html = ""
 
-    # GET or POST with error -> show form inline
-    return f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Sign Up</title>
-    </head>
-    <body>
-        <h1 style="color:black; margin:2rem;">SIGNUP PAGE</h1>
-        {error_html}
-        <form method="post" style="margin:2rem; color:black;">
-            <label>
-                Username:
-                <input type="text" name="username" required>
-            </label>
-            <br><br>
-            <label>
-                Password:
-                <input type="password" name="password" required>
-            </label>
-            <br><br>
-            <button type="submit">Sign Up</button>
-        </form>
-        <p style="margin:2rem; color:black;">
-            Already have an account?
-            <a href="{url_for('login')}">Log in</a>
-        </p>
-        <p style="margin:2rem;">
-            <a href="{url_for('landing')}">Back to start</a>
-        </p>
-    </body>
-    </html>
-    """
+    # GET or POST with error -> render template
+    return render_template("signup.html", error=error_html)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -224,39 +173,7 @@ def login():
     else:
         error_html = ""
 
-    return f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-    </head>
-    <body>
-        <h1 style="color:black; margin:2rem;">LOGIN PAGE</h1>
-        {error_html}
-        <form method="post" style="margin:2rem; color:black;">
-            <label>
-                Username:
-                <input type="text" name="username" required>
-            </label>
-            <br><br>
-            <label>
-                Password:
-                <input type="password" name="password" required>
-            </label>
-            <br><br>
-            <button type="submit">Login</button>
-        </form>
-        <p style="margin:2rem; color:black;">
-            Don't have an account?
-            <a href="{url_for('signup')}">Sign up</a>
-        </p>
-        <p style="margin:2rem;">
-            <a href="{url_for('landing')}">Back to start</a>
-        </p>
-    </body>
-    </html>
-    """
+    return render_template("login.html", error=error_html)
 
 
 @app.route("/logout")

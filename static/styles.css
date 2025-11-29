@@ -398,6 +398,115 @@ h1 {
   font-size: 0.9rem;
 }
 
+/* ------------------------------
+   Glass buttons and auth form
+   ------------------------------ */
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  color: var(--text-main);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(2,6,23,0.6), inset 0 1px 2px rgba(255,255,255,0.03);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.glass-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(2,6,23,0.75), inset 0 1px 3px rgba(255,255,255,0.04);
+}
+
+.glass-btn.primary {
+  background: linear-gradient(135deg, rgba(14,165,233,0.95), rgba(15,24,115,0.95));
+  border-color: rgba(56,189,248,0.9);
+  color: #ecfeff;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"] {
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(148,163,184,0.6);
+  background: rgba(255,255,255,0.02);
+  color: var(--text-main);
+  outline: none;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.muted { color: var(--text-muted); }
+.error { color: var(--danger); }
+
+/* ------------------------------
+   Landing page
+   ------------------------------ */
+
+.landing {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.landing-card {
+  text-align: center;
+  padding: 3rem 2.5rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(15,23,42,0.7), rgba(30,64,175,0.65));
+  border: 1px solid rgba(148,163,184,0.45);
+  box-shadow: 0 40px 100px rgba(2,6,23,0.95), 0 0 0 1px rgba(148,163,184,0.25);
+}
+
+.landing-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 4.4rem;
+  margin: 0 0 0.2rem;
+  letter-spacing: 0.18em;
+  color: #e5f0ff;
+}
+
+.landing-subtitle {
+  margin: 0 0 1.6rem;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.landing-actions { display: flex; gap: 0.8rem; justify-content: center; }
+
+/* Small screens: scale down the landing title */
+@media (max-width: 480px) {
+  .landing-title { font-size: 2.6rem; }
+  .app { padding: 1.6rem; }
+}
+
+
 /* Checkboxes */
 #list input[type="checkbox"] {
   width: 16px;
