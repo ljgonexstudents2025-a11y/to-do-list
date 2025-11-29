@@ -1,17 +1,27 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.13.5, pytest-9.0.1, pluggy-1.6.0
+platform darwin -- Python 3.13.5, pytest-9.0.1, pluggy-1.6.0 -- /Users/lediangonzalez/to-do-list/.venv/bin/python
+cachedir: .pytest_cache
 rootdir: /Users/lediangonzalez/to-do-list
 plugins: cov-7.0.0
-collected 7 items
+collecting ... collected 12 items
 
-tests/test_api.py .......                                                [100%]
+tests/test_api.py::test_home_page_loads PASSED                           [  8%]
+tests/test_api.py::test_list_todos_initially_empty PASSED                [ 16%]
+tests/test_api.py::test_add_and_list_todo PASSED                         [ 25%]
+tests/test_api.py::test_add_todo_without_text_returns_400 PASSED         [ 33%]
+tests/test_api.py::test_update_text_and_due_date_and_category PASSED     [ 41%]
+tests/test_api.py::test_mark_todo_done_and_delete PASSED                 [ 50%]
+tests/test_api.py::test_update_nonexistent_todo_returns_404 PASSED       [ 58%]
+tests/test_api.py::test_signup_page_loads PASSED                         [ 66%]
+tests/test_api.py::test_login_page_loads PASSED                          [ 75%]
+tests/test_api.py::test_signup_login_account_flow PASSED                 [ 83%]
+tests/test_api.py::test_account_requires_login PASSED                    [ 91%]
+tests/test_api.py::test_login_wrong_password_shows_error PASSED          [100%]
 
-================================ tests coverage ================================
-_______________ coverage: platform darwin, python 3.13.5-final-0 _______________
-
-Name        Stmts   Miss  Cover   Missing
------------------------------------------
-server.py      65      3    95%   133-135
------------------------------------------
-TOTAL          65      3    95%
-============================== 7 passed in 0.15s ===============================
+============================== 12 passed in 0.41s ==============================
+Name                Stmts   Miss  Cover
+---------------------------------------
+server.py             163     22    87%
+tests/test_api.py     109      1    99%
+---------------------------------------
+TOTAL                 272     23    92%
