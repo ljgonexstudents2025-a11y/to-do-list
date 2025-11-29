@@ -429,6 +429,12 @@ h1 {
   color: #ecfeff;
 }
 
+.glass-btn.primary-light {
+  background: linear-gradient(135deg, rgba(56,189,248,0.85), rgba(14,165,233,0.85));
+  border-color: rgba(56,189,248,0.9);
+  color: #ecfeff;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -462,6 +468,10 @@ h1 {
 
 .muted { color: var(--text-muted); }
 .error { color: var(--danger); }
+
+.success { color: var(--success); margin-bottom: 0.6rem; }
+
+.account-section { margin-bottom: 1rem; }
 
 /* ------------------------------
    Landing page

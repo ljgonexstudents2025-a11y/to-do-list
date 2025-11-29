@@ -115,7 +115,7 @@ def signup():
         password = request.form.get("password")
 
         if not username or not password:
-            error_html = "<p style='color:red;'>Please fill in all fields.</p>"
+            error_html = "<p style='color:red;'>Please fill in all fields</p>"
         else:
             db = get_db()
 
@@ -125,7 +125,7 @@ def signup():
             ).fetchone()
 
             if existing:
-                error_html = "<p style='color:red;'>Username already taken.</p>"
+                error_html = "<p style='color:red;'>Username already taken</p>"
             else:
                 password_hash = generate_password_hash(password)
                 db.execute(
@@ -190,11 +190,80 @@ def index():
     # Renders templates/index.html – only for logged-in users
     return render_template("index.html", title="To-Do List")
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
 @login_required
 def account():
-    # For now, just redirect to the main to-do page
-    return redirect(url_for("index"))
+    """Account management: change username, change password, delete account."""
+    db = get_db()
+    user_id = session.get("user_id")
+    error = ""
+    success = ""
+
+    if request.method == "POST":
+        action = request.form.get("action")
+
+        if action == "update_username":
+            new_username = (request.form.get("username") or "").strip()
+            if not new_username:
+                error = "Username cannot be empty."
+            else:
+                existing = db.execute(
+                    "SELECT id FROM users WHERE username = ?",
+                    (new_username,),
+                ).fetchone()
+
+                if existing and existing["id"] != user_id:
+                    error = "Username already taken."
+                else:
+                    db.execute(
+                        "UPDATE users SET username = ? WHERE id = ?",
+                        (new_username, user_id),
+                    )
+                    db.commit()
+                    session["username"] = new_username
+                    success = "Username updated."
+
+        elif action == "update_password":
+            current = request.form.get("current_password") or ""
+            new = request.form.get("new_password") or ""
+            confirm = request.form.get("confirm_password") or ""
+
+            user = db.execute(
+                "SELECT password_hash FROM users WHERE id = ?", (user_id,)
+            ).fetchone()
+
+            if user is None or not check_password_hash(user["password_hash"], current):
+                error = "Current password is incorrect."
+            elif not new:
+                error = "New password cannot be empty."
+            elif new != confirm:
+                error = "New passwords do not match."
+            else:
+                new_hash = generate_password_hash(new)
+                db.execute(
+                    "UPDATE users SET password_hash = ? WHERE id = ?",
+                    (new_hash, user_id),
+                )
+                db.commit()
+                success = "Password updated."
+
+        elif action == "delete_account":
+            confirm = request.form.get("confirm") or ""
+            if confirm != "DELETE":
+                error = "Type DELETE in the confirmation box to delete your account."
+            else:
+                # remove user's todos and user record, then log out
+                db.execute("DELETE FROM todos WHERE user_id = ?", (user_id,))
+                db.execute("DELETE FROM users WHERE id = ?", (user_id,))
+                db.commit()
+                session.clear()
+                return redirect(url_for("landing"))
+
+        else:
+            error = "Unknown action."
+
+    user = db.execute("SELECT id, username FROM users WHERE id = ?", (user_id,)).fetchone()
+    return render_template("account.html", user=user, error=error, success=success)
 
 
 # ---------- Prometheus Metrics ----------
