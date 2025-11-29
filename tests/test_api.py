@@ -247,3 +247,98 @@ def test_login_wrong_password_shows_error():
 
     assert resp.status_code == 200
     assert b"Invalid" in resp.data or b"incorrect" in resp.data
+
+def test_each_user_sees_only_their_own_todos():
+    # Two separate clients -> separate sessions/cookies
+    client_a = app.test_client()
+    client_b = app.test_client()
+
+    # --- Alice signs up & adds a todo ---
+    signup_resp_a = client_a.post(
+        "/signup",
+        data={"username": "alice", "password": "alicepass"},
+        follow_redirects=True,
+    )
+    assert signup_resp_a.status_code == 200
+
+    add_resp_a = client_a.post(
+        "/api/todos",
+        data=json.dumps(
+            {
+                "text": "Alice task",
+                "due_date": "2030-01-01",
+                "category": "personal",
+            }
+        ),
+        content_type="application/json",
+    )
+    assert add_resp_a.status_code == 201
+
+    # Alice sees her todo
+    list_resp_a = client_a.get("/api/todos")
+    assert list_resp_a.status_code == 200
+    todos_a = list_resp_a.get_json()
+    assert len(todos_a) == 1
+    assert todos_a[0]["text"] == "Alice task"
+
+    # --- Bob signs up and should see NO todos initially ---
+    signup_resp_b = client_b.post(
+        "/signup",
+        data={"username": "bob", "password": "bobpass"},
+        follow_redirects=True,
+    )
+    assert signup_resp_b.status_code == 200
+
+    list_resp_b = client_b.get("/api/todos")
+    assert list_resp_b.status_code == 200
+    todos_b = list_resp_b.get_json()
+    # Bob should not see Alice's tasks
+    assert todos_b == []
+
+
+def test_user_cannot_modify_or_delete_other_users_todo():
+    client_a = app.test_client()
+    client_b = app.test_client()
+
+    # --- Alice signs up & creates a todo ---
+    client_a.post(
+        "/signup",
+        data={"username": "alice", "password": "alicepass"},
+        follow_redirects=True,
+    )
+    create_resp = client_a.post(
+        "/api/todos",
+        data=json.dumps({"text": "Alice secret task"}),
+        content_type="application/json",
+    )
+    assert create_resp.status_code == 201
+    alice_todo = create_resp.get_json()
+    todo_id = alice_todo["id"]
+
+    # --- Bob signs up ---
+    client_b.post(
+        "/signup",
+        data={"username": "bob", "password": "bobpass"},
+        follow_redirects=True,
+    )
+
+    # Bob tries to delete Alice's todo -> should NOT work (404)
+    delete_resp = client_b.delete(f"/api/todos/{todo_id}")
+    assert delete_resp.status_code == 404
+
+    # Bob also can't update Alice's todo
+    patch_resp = client_b.patch(
+        f"/api/todos/{todo_id}",
+        data=json.dumps({"text": "Hacked by Bob", "done": True}),
+        content_type="application/json",
+    )
+    assert patch_resp.status_code == 404
+
+    # Alice should still see her todo intact
+    list_resp_a = client_a.get("/api/todos")
+    assert list_resp_a.status_code == 200
+    todos_a = list_resp_a.get_json()
+    assert len(todos_a) == 1
+    assert todos_a[0]["id"] == todo_id
+    assert todos_a[0]["text"] == "Alice secret task"
+    assert todos_a[0]["done"] is False
