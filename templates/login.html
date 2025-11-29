@@ -14,23 +14,19 @@
 
         <div class="page-content">
             <div class="app">
-                <h1>Sign in</h1>
-                <p class="subtitle">Welcome back — plan and achieve with us</p>
+                <h1>Log in</h1>
+                <p class="subtitle">Welcome back!</p>
 
                 {% if error %}
                     <p class="error">{{ error }}</p>
                 {% endif %}
 
                 <form method="post" class="auth-form">
-                    <label>
-                        Username
-                        <input type="text" name="username" required />
-                    </label>
+                    <label for="username" class="visually-hidden">Username</label>
+                    <input id="username" type="text" name="username" placeholder="Username" autocomplete="username" required />
 
-                    <label>
-                        Password
-                        <input type="password" name="password" required />
-                    </label>
+                    <label for="password" class="visually-hidden">Password</label>
+                    <input id="password" type="password" name="password" placeholder="Password" autocomplete="current-password" required />
 
                     <div class="auth-actions">
                         <button type="submit" class="glass-btn primary">Login</button>
@@ -39,7 +35,7 @@
                 </form>
 
                 <p class="muted">
-                    Don't have an account? <a href="{{ url_for('signup') }}">Create one</a>
+                    Don't have an account? <a href="{{ url_for('signup') }}"> Let's create one</a>
                 </p>
             </div>
         </div>
