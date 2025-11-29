@@ -23,6 +23,14 @@ DB_PATH = Path("todos.db")
 app = Flask(__name__)
 app.secret_key = "change-me-to-something-random"  # change for production
 
+#
+def current_user_id():
+    """
+    Returns the logged-in user's id from the session, or 0 for
+    'anonymous' / test clients that aren't using auth.
+    This keeps your existing API tests working as user_id=0.
+    """
+    return session.get("user_id", 0)
 
 # ---------- Auth helper ----------
 
@@ -51,6 +59,7 @@ def close_db(_):
     if db:
         db.close()
 
+# ---------- Initialized DB ----------
 
 def init_db():
     """
@@ -77,10 +86,12 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS todos (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id   INTEGER NOT NULL,
             text      TEXT NOT NULL,
             done      INTEGER NOT NULL DEFAULT 0,
             due_date  TEXT,
-            category  TEXT
+            category  TEXT,
+            FOREIGN KEY (user_id) REFERENCES users (id)
         );
         """
     )
@@ -362,9 +373,18 @@ def metrics():
 
 @app.get("/api/todos")
 def list_todos():
-    rows = get_db().execute(
-        "SELECT id, text, done, due_date, category FROM todos ORDER BY id DESC"
+    user_id = current_user_id()
+    db = get_db()
+    rows = db.execute(
+        """
+        SELECT id, text, done, due_date, category
+        FROM todos
+        WHERE user_id = ?
+        ORDER BY id DESC
+        """,
+        (user_id,),
     ).fetchall()
+
     return jsonify(
         [
             {
@@ -381,20 +401,23 @@ def list_todos():
 
 @app.post("/api/todos")
 def add_todo():
+    user_id = current_user_id()
+
     data = request.get_json() or {}
     text = data.get("text", "").strip()
     if not text:
         return jsonify({"error": "text required"}), 400
 
-    due_date = data.get("due_date")   # expect "YYYY-MM-DD" or None
-    category = data.get("category")   # e.g. "school", "work", "personal"
+    due_date = data.get("due_date")   # "YYYY-MM-DD" or None
+    category = data.get("category")   # "school", "work", "personal", etc.
 
     db = get_db()
     cur = db.execute(
-        "INSERT INTO todos(text, due_date, category) VALUES (?, ?, ?)",
-        (text, due_date, category),
+        "INSERT INTO todos(user_id, text, due_date, category) VALUES (?, ?, ?, ?)",
+        (user_id, text, due_date, category),
     )
     db.commit()
+
     return (
         jsonify(
             {
@@ -408,44 +431,53 @@ def add_todo():
         201,
     )
 
-
 @app.patch("/api/todos/<int:todo_id>")
 def update_todo(todo_id):
+    user_id = current_user_id()
     data = request.get_json() or {}
 
+    db = get_db()
+
     if "done" in data:
-        get_db().execute(
-            "UPDATE todos SET done=? WHERE id=?",
-            (1 if data["done"] else 0, todo_id),
+        db.execute(
+            "UPDATE todos SET done=? WHERE id=? AND user_id=?",
+            (1 if data["done"] else 0, todo_id, user_id),
         )
 
     if "text" in data:
-        new_text = data["text"].strip()
+        new_text = (data["text"] or "").strip()
         if new_text:
-            get_db().execute(
-                "UPDATE todos SET text=? WHERE id=?",
-                (new_text, todo_id),
+            db.execute(
+                "UPDATE todos SET text=? WHERE id=? AND user_id=?",
+                (new_text, todo_id, user_id),
             )
 
     if "due_date" in data:
-        get_db().execute(
-            "UPDATE todos SET due_date=? WHERE id=?",
-            (data["due_date"], todo_id),
+        db.execute(
+            "UPDATE todos SET due_date=? WHERE id=? AND user_id=?",
+            (data["due_date"], todo_id, user_id),
         )
 
     if "category" in data:
-        get_db().execute(
-            "UPDATE todos SET category=? WHERE id=?",
-            (data["category"], todo_id),
+        db.execute(
+            "UPDATE todos SET category=? WHERE id=? AND user_id=?",
+            (data["category"], todo_id, user_id),
         )
 
-    get_db().commit()
-    row = get_db().execute(
-        "SELECT id, text, done, due_date, category FROM todos WHERE id=?",
-        (todo_id,),
+    db.commit()
+
+    row = db.execute(
+        """
+        SELECT id, text, done, due_date, category
+        FROM todos
+        WHERE id=? AND user_id=?
+        """,
+        (todo_id, user_id),
     ).fetchone()
+
     if not row:
         return jsonify({"error": "not found"}), 404
+
     return jsonify(
         {
             "id": row["id"],
@@ -459,10 +491,18 @@ def update_todo(todo_id):
 
 @app.delete("/api/todos/<int:todo_id>")
 def delete_todo(todo_id):
-    get_db().execute("DELETE FROM todos WHERE id=?", (todo_id,))
-    get_db().commit()
-    return "", 204
+    user_id = current_user_id()
+    db = get_db()
+    cur = db.execute(
+        "DELETE FROM todos WHERE id=? AND user_id=?",
+        (todo_id, user_id),
+    )
+    db.commit()
 
+    if cur.rowcount == 0:
+        return jsonify({"error": "not found"}), 404
+
+    return "", 204
 
 # ---------- Main ----------
 
