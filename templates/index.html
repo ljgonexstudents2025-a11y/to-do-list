@@ -1,33 +1,56 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>{{ title }}</title>
+    <title>{{ title or "To-Do List" }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/static/styles.css" />
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
-<nav>
-    {% if session.username %}
-        <span>Logged in as {{ session.username }}</span>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    {% else %}
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('signup') }}">Sign Up</a>
-    {% endif %}
-</nav>
 
   <body>
+    <!-- Glassy top bar with hamburger -->
+    <header class="top-bar">
+      <div class="top-bar__title">SIENE</div>
 
-    <!--  BACKGROUND VIDEO-->
+      <div class="top-bar__right">
+        <span class="top-bar__username">
+          {% if session.username %}
+            Hey, {{ session.username }}!
+          {% else %}
+            Not logged in
+          {% endif %}
+        </span>
+
+        <button
+          class="hamburger"
+          id="hamburger"
+          type="button"
+          aria-label="Open menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="hamburger-menu" id="hamburger-menu">
+          <a href="{{ url_for('account') }}">View account</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Background video -->
     <video autoplay muted loop id="bg-video">
-      <source src="/static/background.mp4" type="video/mp4" />
+      <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4" />
     </video>
 
     <!-- Everything else goes ABOVE the video -->
     <div class="page-content">
-
       <div class="app">
         <h1>my tasks</h1>
         <p class="subtitle">plan your day and future tasks🪼</p>
@@ -63,9 +86,40 @@
           Clear completed
         </button>
       </div>
-
     </div>
 
-    <script src="/static/app.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+        <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+    <!-- Inline script just for the hamburger menu -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("hamburger");
+        const menu = document.getElementById("hamburger-menu");
+
+        if (!btn || !menu) {
+          return;
+        }
+
+        // Toggle menu on button click
+        btn.addEventListener("click", function (event) {
+          event.stopPropagation(); // don't bubble to document
+          menu.classList.toggle("is-open");
+        });
+
+        // Close menu when clicking anywhere else
+        document.addEventListener("click", function (event) {
+          if (!menu.classList.contains("is-open")) return;
+
+          const clickInside =
+            menu.contains(event.target) || btn.contains(event.target);
+
+          if (!clickInside) {
+            menu.classList.remove("is-open");
+          }
+        });
+      });
+    </script>
   </body>
 </html>
+

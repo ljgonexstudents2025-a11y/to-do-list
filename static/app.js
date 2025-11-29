@@ -9,6 +9,32 @@ const clearCompletedBtn = document.getElementById("clearCompleted");
 const filtersContainer = document.querySelector(".filters");
 const todayEl = document.getElementById("today");
 
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("hamburger");
+  const menu = document.getElementById("hamburger-menu");
+
+  if (!btn || !menu) return;
+
+  // toggle on button click
+  btn.addEventListener("click", (event) => {
+    event.stopPropagation(); // don't trigger document click
+    menu.classList.toggle("is-open");
+  });
+
+  // close when clicking anywhere else
+  document.addEventListener("click", (event) => {
+    if (!menu.classList.contains("is-open")) return;
+
+    const clickInside =
+      menu.contains(event.target) || btn.contains(event.target);
+
+    if (!clickInside) {
+      menu.classList.remove("is-open");
+    }
+  });
+});
+
+
 // In-memory list of todos (comes from the server)
 let todos = [];
 let currentFilter = "all";

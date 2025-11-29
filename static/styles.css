@@ -2,6 +2,139 @@
    Ocean Glassmorphism Theme
    ========================================= */
 
+   /* ---------- Glassy Top Bar + Hamburger ---------- */
+
+.top-bar {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  height: 56px;
+  padding: 0 1.25rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+
+  background: radial-gradient(circle at top left,
+              rgba(15, 23, 42, 0.9),
+              rgba(2, 6, 23, 0.98));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.5);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+.top-bar__title {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e5f0ff;
+}
+
+.top-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.top-bar__username {
+  font-size: 0.85rem;
+  color: rgba(226, 232, 240, 0.75);
+}
+
+/* Glassy hamburger pill */
+.hamburger {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: radial-gradient(circle at top left,
+              rgba(15, 23, 42, 0.95),
+              rgba(15, 23, 42, 0.7));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding-inline: 7px;
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 28px rgba(15, 23, 42, 0.9),
+    inset 0 1px 4px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+              border-color 0.15s ease;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;
+  border-radius: 999px;
+  background: #e5f0ff;
+}
+
+.hamburger:hover {
+  transform: translateY(-1px);
+  border-color: #38bdf8;
+  box-shadow:
+    0 16px 36px rgba(15, 23, 42, 1),
+    inset 0 1px 4px rgba(255, 255, 255, 0.22);
+}
+
+/* Dropdown menu */
+.hamburger-menu {
+  position: absolute;
+  top: 56px;
+  right: 1.25rem;
+  min-width: 170px;
+
+  padding: 0.5rem 0;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    140deg,
+    rgba(15, 23, 42, 0.98),
+    rgba(15, 23, 42, 0.9)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(56, 189, 248, 0.16);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+
+  display: none;
+  z-index: 999;
+}
+
+.hamburger-menu a {
+  display: block;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.85rem;
+  color: #e5f0ff;
+  text-decoration: none;
+}
+
+.hamburger-menu a:hover {
+  background: rgba(56, 189, 248, 0.14);
+  color: #f9fbff;
+}
+
+/* class toggled by JS */
+.hamburger-menu.is-open {
+  display: block;
+}
+
+/* Content offset below top bar */
+.page-content {
+  padding-top: 72px;
+}
+
+
 /* Ocean palette */
 :root {
   --ocean-deep: #020617;       /* very dark blue */
@@ -412,3 +545,4 @@ button {
     font-size: 0.8rem;
   }
 }
+
