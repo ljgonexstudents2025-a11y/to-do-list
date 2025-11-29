@@ -1,29 +1,18 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.13.5, pytest-9.0.1, pluggy-1.6.0 -- /Users/lediangonzalez/to-do-list/.venv/bin/python
-cachedir: .pytest_cache
+platform darwin -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0
 rootdir: /Users/lediangonzalez/to-do-list
-plugins: cov-7.0.0
-collecting ... collected 14 items
+plugins: mock-3.15.1, anyio-4.7.0, cov-7.0.0
+collected 19 items
 
-tests/test_api.py::test_home_page_loads PASSED                           [  7%]
-tests/test_api.py::test_list_todos_initially_empty PASSED                [ 14%]
-tests/test_api.py::test_add_and_list_todo PASSED                         [ 21%]
-tests/test_api.py::test_add_todo_without_text_returns_400 PASSED         [ 28%]
-tests/test_api.py::test_update_text_and_due_date_and_category PASSED     [ 35%]
-tests/test_api.py::test_mark_todo_done_and_delete PASSED                 [ 42%]
-tests/test_api.py::test_update_nonexistent_todo_returns_404 PASSED       [ 50%]
-tests/test_api.py::test_signup_page_loads PASSED                         [ 57%]
-tests/test_api.py::test_login_page_loads PASSED                          [ 64%]
-tests/test_api.py::test_signup_login_account_flow PASSED                 [ 71%]
-tests/test_api.py::test_account_requires_login PASSED                    [ 78%]
-tests/test_api.py::test_login_wrong_password_shows_error PASSED          [ 85%]
-tests/test_api.py::test_each_user_sees_only_their_own_todos PASSED       [ 92%]
-tests/test_api.py::test_user_cannot_modify_or_delete_other_users_todo PASSED [100%]
+tests/test_api.py ..............                                         [ 73%]
+tests/test_server_extra.py .....                                         [100%]
 
-============================== 14 passed in 0.67s ==============================
-Name                Stmts   Miss  Cover
----------------------------------------
-server.py             174     22    87%
-tests/test_api.py     147      1    99%
----------------------------------------
-TOTAL                 321     23    93%
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.13.5-final-0 _______________
+
+Name        Stmts   Miss  Cover   Missing
+-----------------------------------------
+server.py     217     15    93%   118, 208, 216, 238, 240, 263, 301-302, 319, 339-341, 496-498
+-----------------------------------------
+TOTAL         217     15    93%
+============================== 19 passed in 1.06s ==============================
