@@ -287,6 +287,37 @@ h1 {
   color: rgba(191, 219, 254, 0.75);
 }
 
+
+/* Base badge styles */
+.badge {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+/* Personal badge */
+.badge-personal {
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.8);
+  color: #e0f2fe;
+}
+
+/* School badge */
+.badge-school {
+  background: rgba(248, 248, 56, 0.18);
+  border: 1px solid rgba(248, 239, 56, 0.8);
+  color: #e0f2fe;
+}
+
+/* Work badge */
+.badge-work {
+  background: rgba(56, 248, 72, 0.18);
+  border: 1px solid rgba(56, 248, 101, 0.8);
+  color: #e0f2fe;
+}
+
+
 /* Category badge */
 .badge {
   padding: 0.1rem 0.55rem;

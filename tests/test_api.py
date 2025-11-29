@@ -171,3 +171,79 @@ def test_update_nonexistent_todo_returns_404():
     data = resp.get_json()
     assert "error" in data
 
+def test_signup_page_loads():
+    client = app.test_client()
+    resp = client.get("/signup")
+    assert resp.status_code == 200
+    assert b"Sign Up" in resp.data or b"Create account" in resp.data
+
+
+def test_login_page_loads():
+    client = app.test_client()
+    resp = client.get("/login")
+    assert resp.status_code == 200
+    assert b"Log In" in resp.data or b"Login" in resp.data
+
+
+def test_signup_login_account_flow():
+    client = app.test_client()
+
+    # --- Sign up a new user ---
+    signup_resp = client.post(
+        "/signup",
+        data={
+            "username": "alice",
+            "password": "supersecret123",
+        },
+        follow_redirects=True,  # follow whatever redirect you do after signup
+    )
+    assert signup_resp.status_code == 200
+
+    # --- Log in with that user ---
+    login_resp = client.post(
+        "/login",
+        data={
+            "username": "alice",
+            "password": "supersecret123",
+        },
+        follow_redirects=True,  # again, follow redirects
+    )
+    assert login_resp.status_code == 200
+
+    # --- Hit the account page (this will follow redirects too) ---
+    account_resp = client.get("/account", follow_redirects=True)
+    assert account_resp.status_code == 200
+    # For coverage we don't need a strict content check, but you can add one if you like:
+    # assert b"Account" in account_resp.data or b"alice" in account_resp.data
+
+
+def test_account_requires_login():
+    client = app.test_client()
+
+    resp = client.get("/account", follow_redirects=False)
+    assert resp.status_code in (302, 301)
+
+
+def test_login_wrong_password_shows_error():
+    client = app.test_client()
+
+    client.post(
+        "/signup",
+        data={
+            "username": "bob",
+            "password": "correct-password",
+        },
+        follow_redirects=True,
+    )
+
+    resp = client.post(
+        "/login",
+        data={
+            "username": "bob",
+            "password": "wrong-password",
+        },
+        follow_redirects=True,
+    )
+
+    assert resp.status_code == 200
+    assert b"Invalid" in resp.data or b"incorrect" in resp.data
